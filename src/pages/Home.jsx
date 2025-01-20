@@ -1,22 +1,51 @@
+import { useEffect, useState } from "react";
 import { LuEyeClosed } from "react-icons/lu";
 import { useLoaderData } from "react-router-dom";
 import Swal from 'sweetalert2'
 const Home = () => {
-    const currentDesignationID = useLoaderData();
+
+    const getID = useLoaderData()
+    console.log(getID);
+
+    // useEffect(() => {
+    //     // Fetch Designation IDs
+    //     fetch('http://localhost:3001/desigDept')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log(data);
+    //             setDesignations(data); 
+    //         })
+    //         .catch(error => console.error('Error fetching designations:', error));
+
+    //     // Fetch Designation IDs
+    //     /*fetch('http://localhost:3001/designations')
+    //         .then(response => response.json())
+    //         .then(data => setDesignations(data))
+    //         .catch(error => console.error('Error fetching designations:', error));
+
+    //     // Fetch Department IDs
+    //     fetch('http://localhost:3001/dept')
+    //         .then(response => response.json())
+    //         .then(data => setDepartments(data))
+    //         .catch(error => console.error('Error fetching departments:', error));*/
+    // }, []);
+
+
+
     const handleSubmitbtn = (event) => {
         event.preventDefault();
         const form = event.target;
         const name = form.name.value;
         const username = form.username.value;
         const password = form.password.value;
-        const designation = form.designation.value;
-        const dept = form.dept.value;
+        const designation = form["radio-desig"].value;
+        const dept = form["radio-dept"].value;
         const createDate = form.cdate.value;
         const updateDate = form.udate.value;
         const addEmployee = {
             name, username, password, designation, dept, createDate, updateDate
         }
-        fetch("http://localhost:3001/", {
+        fetch("http://localhost:3001/employee", {
             method: "POST",
             headers: {
                 "content-type": "application/json",
@@ -26,7 +55,7 @@ const Home = () => {
             .then((res) => res.json())
             .then(data => {
                 console.log(data)
-                if (data.insertedId) {
+                if (data.insertedId != 0) {
                     Swal.fire({
                         title: 'Success!',
                         text: 'Employee Data Added Successfully',
@@ -136,47 +165,76 @@ const Home = () => {
                             <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                         </label>
                     </div>
-                    <div className="dropdown max-w-52 dropdown-hover md:mx-auto">
+                    <div className="flex">
+                        <div className="dropdown max-w-52 dropdown-hover md:mx-auto">
 
-                       
-                        {/* <ul tabIndex={0}
-                            className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"></ul> */}
-                        <div 
-                            role="button"
-                            className="btn m-1 font-extrabold text-xl"> Designation Id
 
-<ul 
-                                className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                        {currentDesignationID.map((item, index) => (
-                            
-                                <li key={index} tabIndex={0}>
-                                    <a tabIndex={0} className="flex gap-9">
-                                    <input
-                                            type="radio"
-                                            value={item.designation_id}
-                                            name="radio-reqdocs"
-                                            className="checkbox checkbox-success"
-                                            defaultChecked
-                                        />
-                                        <span className="label-text">{item.title}</span>
-                                        
-                                    </a>
-                                </li>
+                            {/* <ul tabIndex={0}
+    className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"></ul> */}
+                            <div
+                                role="button"
+                                className="btn m-1 font-extrabold text-xl"> Designation Id
 
-                        ))}
-                        </ul>
+                                <ul
+                                    className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                    {getID.desig.map((item, index) => (
+
+                                        <li key={index} tabIndex={0}>
+                                            <a tabIndex={0} className="flex gap-9">
+                                                <input
+                                                    type="radio"
+                                                    value={item.designation_id}
+                                                    name="radio-desig"
+                                                    className="checkbox checkbox-success"
+                                                    defaultChecked
+                                                />
+                                                <span className="label-text">{item.title}</span>
+
+                                            </a>
+                                        </li>
+
+                                    ))}
+                                </ul>
+                            </div>
+
+
+
                         </div>
+                        <div className="dropdown max-w-52 dropdown-hover md:mx-auto">
 
 
-                        
+                            
+                            <div
+                                role="button"
+                                className="btn m-1 font-extrabold text-xl"> Department Id
+
+                                <ul
+                                    className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                    {getID.dept.map((item, index) => (
+
+                                        <li key={index} tabIndex={0}>
+                                            <a tabIndex={0} className="flex gap-9">
+                                                <input
+                                                    type="radio"
+                                                    value={item.department_id}
+                                                    name="radio-dept"
+                                                    className="checkbox checkbox-success"
+                                                    defaultChecked
+                                                />
+                                                <span className="label-text">{item.title}</span>
+
+                                            </a>
+                                        </li>
+
+                                    ))}
+                                </ul>
+                            </div>
+
+
+
+                        </div>
                     </div>
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text">Department</span>
-                        </label>
 
-                        <input type="text" className="input input-bordered" name="dept" placeholder="Please type your Department" id="" required />
-                    </div>
 
                     <div className="form-control">
                         <label className="label">

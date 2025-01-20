@@ -7,6 +7,7 @@ import Department from "./Department";
 const Departments = () => {
     const showDepartments = useLoaderData();
     const [depts, setDepts] = useState(showDepartments);
+    
     const handleDeleteDeptbtn = department_id => {
         fetch(`http://localhost:3001/dept/${department_id}`,{
             method: "DELETE",

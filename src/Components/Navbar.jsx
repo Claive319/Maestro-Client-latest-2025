@@ -36,7 +36,7 @@ const Navbar = () => {
                     <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/'>Home</NavLink></a></li>
                     <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/employee'>Employees</NavLink></a></li>
                     <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/designations'>Designations</NavLink></a></li>
-                    <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/dept'>Departmets</NavLink></a></li>
+                    <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/dept'>Departments</NavLink></a></li>
 
 
                     

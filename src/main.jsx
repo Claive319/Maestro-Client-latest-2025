@@ -13,6 +13,7 @@ import Designations from './Components/Designations/Designations';
 import Departments from './Components/Departments/Departments';
 import UpdateDesignations from './Components/Designations/UpdateDesignations';
 import UpdateDepts from './Components/Departments/UpdateDepts';
+import UpdateEmployee from './Components/Employees/UpdateEmployee';
 
 
 const router = createBrowserRouter([
@@ -22,11 +23,12 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        loader: ()=>fetch('http://localhost:3001/designations'),
+        loader: ()=>fetch('http://localhost:3001/desigDept'),
         element: <Home></Home>,
       },
       {
         path:"/employee",
+        loader: ()=>fetch(`http://localhost:3001/employee`),
         element: <Employees></Employees>
       },
       {
@@ -48,6 +50,11 @@ const router = createBrowserRouter([
         path:'/dept/:id',
         element:<UpdateDepts></UpdateDepts>,
         loader: ({params})=>fetch(`http://localhost:3001/dept/${params.id}`)
+      },
+      {
+        path:"/employee/:id",
+        element:<UpdateEmployee></UpdateEmployee>,
+        loader:({params})=>fetch(`http://localhost:3001/employee/${params.id}`)
       }
     ],
   },

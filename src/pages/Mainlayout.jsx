@@ -7,7 +7,7 @@ const Mainlayout = () => {
         <div>
             <Navbar></Navbar>
             <div className="min-h-[calc(100vh-292px)] container  mx-auto px-12">
-                <div className="flex    mx-auto  justify-center">
+                <div className="flex    mx-auto  justify-center pb-20">
                     <Outlet></Outlet>
 
                 </div>
