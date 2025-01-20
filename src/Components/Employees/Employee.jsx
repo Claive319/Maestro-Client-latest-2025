@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaTrashCan } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, Links } from "react-router-dom";
 
 const Employee = ({ employee, handleDeleteEmployeeBtn }) => {
     const { id, name, username, department, create_date, update_date, designation_id } = employee;
@@ -16,9 +16,11 @@ const Employee = ({ employee, handleDeleteEmployeeBtn }) => {
             <td className="border-2 text-center">{designation_id}</td>
             <td className="border-2 text-center px-8"><Link to={`/employee/${id}`}>
                 <button className="btn btn-ghost">Update</button></Link></td>
+
             <td><button className="btn btn-ghost" onClick={() => handleDeleteEmployeeBtn(id)}>
                 <FaTrashCan />
             </button></td>
+            <td className="border-2 text-center px-8"><Link to={`/employee/${id}`}><button className="btn btn-ghost">Attendence</button></Link></td>
         </tr>
 
 

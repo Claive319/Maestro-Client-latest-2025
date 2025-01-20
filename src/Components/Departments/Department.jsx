@@ -6,7 +6,7 @@ const Department = ({ dept, handleDeleteDeptbtn }) => {
     return (
         <div className="card card-compact bg-white/30  backdrop-blur-sm w-96 shadow-xl transition duration-7000 hover:scale-110 hover:shadow-2xl">
             <div className="card-body">
-                <h1 className="text-center font-bold text-lg">
+                <h1 className="text-center font-bold text-xl">
                     Department ID : {department_id}
                 </h1>
                 <h1 className="text-center font-black  text-[rgb(19,19,19)] text-2xl">
