@@ -23,20 +23,24 @@ const Navbar = () => {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 gap-8 p-2 shadow">
-                        <NavLink to='/'>Home</NavLink>
+                        <NavLink to='/'>DashBoard</NavLink>
+                        <NavLink to='/'>DashBoard</NavLink>
                         <NavLink to='/employee'>Employees</NavLink>
                         <NavLink to='/designations'>Designations</NavLink>
                         <NavLink to='/dept'>Departmets</NavLink>
+                        <NavLink to='/attendence'>Attendence</NavLink>
                     </ul>
                 </div>
                 <a className="btn btn-ghost text-xl">MAESTRO</a>
             </div>
             <div className="navbar-center hidden md:flex">
                 <ul className="menu menu-horizontal px-1 gap-7">
-                    <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/'>Home</NavLink></a></li>
+                    <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/'>DashBoard</NavLink></a></li>
+                    <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/add'>Adding</NavLink></a></li>
                     <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/employee'>Employees</NavLink></a></li>
                     <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/designations'>Designations</NavLink></a></li>
                     <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/dept'>Departments</NavLink></a></li>
+                    <li><a><NavLink className={({ isActive }) => `font-bold ${isActive ? 'text-lime-400 btn btn-primary' : 'hover:text-warning'}`} to='/attendence'>Attendence</NavLink></a></li>
 
 
                     

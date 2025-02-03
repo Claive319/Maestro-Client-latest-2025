@@ -254,14 +254,14 @@ const Employees = () => {
             </div>
             <table >
                 <thead>
-                    <tr className="border-2">
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th>Department</th>
-                        <th>Create Date</th>
-                        <th>Update Date</th>
-                        <th>Designation ID</th>
+                    <tr className="border-2 text-center px-10">
+                        <th className="border-2 text-center px-10">ID</th>
+                        <th className="border-2 text-center px-10">Name</th>
+                        <th className="border-2 text-center px-10">Username</th>
+                        <th className="border-2 text-center px-10">Department</th>
+                        <th className="border-2 text-center px-10">Create Date</th>
+                        <th className="border-2 text-center px-10">Update Date</th>
+                        <th className="border-2 text-center px-10">Designation ID</th>
 
                     </tr>
                 </thead>

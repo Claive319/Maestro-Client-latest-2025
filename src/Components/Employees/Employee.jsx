@@ -20,6 +20,7 @@ const Employee = ({ employee, handleDeleteEmployeeBtn }) => {
             <td><button className="btn btn-ghost" onClick={() => handleDeleteEmployeeBtn(id)}>
                 <FaTrashCan />
             </button></td>
+            <td className="border-2 text-center px-8"><Link to={`/employeeSchedule/${id}`}><button className="btn btn-ghost">Work Schedule</button></Link></td>
             <td className="border-2 text-center px-8"><Link to={`/employee/${id}`}><button className="btn btn-ghost">Attendence</button></Link></td>
         </tr>
 

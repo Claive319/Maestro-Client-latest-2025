@@ -14,6 +14,9 @@ import Departments from './Components/Departments/Departments';
 import UpdateDesignations from './Components/Designations/UpdateDesignations';
 import UpdateDepts from './Components/Departments/UpdateDepts';
 import UpdateEmployee from './Components/Employees/UpdateEmployee';
+import Attendences from './Components/Attendence/Attendences';
+import UEmpSchedule from './Components/WorkSchedules/UEmpSchedule';
+import Dashboard from './pages/Dashboard';
 
 
 const router = createBrowserRouter([
@@ -23,8 +26,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        
+        element: <Dashboard></Dashboard>,
+      },
+      {
+        path: "/add",
         loader: ()=>fetch('http://localhost:3001/desigDept'),
-        element: <Home></Home>,
+        element: <Home></Home>
+
       },
       {
         path:"/employee",
@@ -55,6 +64,21 @@ const router = createBrowserRouter([
         path:"/employee/:id",
         element:<UpdateEmployee></UpdateEmployee>,
         loader:()=>fetch(`http://localhost:3001/employee`)
+      },
+      {
+        path: '/attendence',
+        element: <Attendences></Attendences>,
+        loader: ()=>fetch('http://localhost:3001/attendence')
+      },
+      {
+        path:"/employeeSchedule/:id",
+        element: <UEmpSchedule></UEmpSchedule>,
+        loader: ()=>fetch('http://localhost:3001/employee')
+      },
+      {
+        path: "/schedule",
+        element: <Dashboard></Dashboard>,
+        
       }
     ],
   },

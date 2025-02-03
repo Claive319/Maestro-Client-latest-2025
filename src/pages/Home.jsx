@@ -5,7 +5,22 @@ import Swal from 'sweetalert2'
 const Home = () => {
 
     const getID = useLoaderData()
-    console.log(getID);
+    const [showdays, setShowDays] = useState([]);
+    // const [showthisDay, setShowThisDay] = useState([]);
+    // const [showdaytitle, setShowDaysTitle] = useState(false);
+    // console.log(getID);
+    const [showthisDay, setShowThisDay] = useState(null);
+    const [showdaytitle, setShowDaysTitle] = useState(false);
+    useEffect(() => {
+        fetch('http://localhost:3001/days')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+
+                setShowDays(data)
+            })
+
+    }, [])
 
     // useEffect(() => {
     //     // Fetch Designation IDs
@@ -131,8 +146,44 @@ const Home = () => {
                 }
             })
     }
+
+    const handleDutyHourSubmitBtn = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const day = form['radio-duty'].value;
+        const from = form.ftime.value;
+        const toTime = form.totime.value;
+        const addDutyTime = {
+            day, from, toTime
+        }
+        fetch("http://localhost:3001/employee/dutyhour", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(addDutyTime)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.insertedId != 0) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Duty Hour Data Added Successfully',
+                        icon: 'success',
+                        showCloseButton: true,
+                        showCancelButton: true,
+
+                        confirmButtonText: 'Cool'
+                    })
+                    form.reset();
+                }
+            })
+
+
+    }
     return (
-        <div className="pb-20 grid grid-cols-3   gap-8">
+        <div className="pb-20 grid grid-cols-4   gap-8">
             <div className="card border-2">
                 <h1 className="font-extrabold text-3xl text-center">Employees</h1>
                 <form onSubmit={handleSubmitbtn} className="card-body">
@@ -173,7 +224,7 @@ const Home = () => {
     className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"></ul> */}
                             <div
                                 role="button"
-                                className="btn m-1 font-extrabold text-xl"> Designation Id
+                                className="btn m-1 font-extrabold text-xl h-[90px]"> Designation Id
 
                                 <ul
                                     className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
@@ -203,10 +254,10 @@ const Home = () => {
                         <div className="dropdown max-w-52 dropdown-hover md:mx-auto">
 
 
-                            
+
                             <div
                                 role="button"
-                                className="btn m-1 font-extrabold text-xl"> Department Id
+                                className="btn m-1 font-extrabold text-xl h-[100px]"> Department Id
 
                                 <ul
                                     className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
@@ -302,6 +353,64 @@ const Home = () => {
                     </div>
                 </form>
 
+            </div>
+            <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+                <h1 className="font-extrabold text-3xl text-center py-4">Duty Hour</h1>
+                <form onSubmit={handleDutyHourSubmitBtn} className="card-body">
+                    <div className="dropdown dropdown-hover  mx-auto">
+
+
+
+                        <div
+                            role="button"
+                            className="btn m-1 font-extrabold text-xl h-[90px]"> {showdaytitle ? showthisDay?.name : "Select Day"}
+
+                            <ul
+                                className="dropdown-content  menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                {showdays.map((item, index) => (
+
+                                    <li key={index} tabIndex={0}>
+                                        <a tabIndex={0} className="flex gap-9">
+                                            <input
+                                                type="radio"
+                                                value={item.id}
+                                                onChange={() => { setShowThisDay(item); setShowDaysTitle(!false) }}
+                                                name="radio-duty"
+                                                className="checkbox checkbox-success"
+                                                checked={showthisDay?.id === item.id}
+                                            />
+                                            <span className="label-text">{item.name}</span>
+
+                                        </a>
+                                    </li>
+
+                                ))}
+                            </ul>
+                        </div>
+
+
+
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text font-bold text-xl">From</span>
+                        </label>
+                        <input type="time" className="input input-bordered" placeholder="Please Input The Employees Duty Hour From" name="ftime" id="" />
+
+
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text font-bold text-xl">To</span>
+                        </label>
+                        <input type="time" className="input input-bordered" placeholder="Please Input The Employees Duty Hour To" name="totime" id="" />
+
+
+                    </div>
+                    <div className="form-control mt-6">
+                        <input type="submit" className="btn  hover:btn-secondary text-center items-center mx-auto w-[300px]  mb-8 font-extrabold text-2xl -transform transform hover:scale-110 hover:shadow-xl rounded-[24px]  border-purple-200 bg-white hover:text-white" value="Submit" />
+                    </div>
+                </form>
             </div>
 
         </div>
