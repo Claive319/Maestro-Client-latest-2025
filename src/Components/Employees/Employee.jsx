@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTrashCan } from "react-icons/fa6";
 import { Link, Links } from "react-router-dom";
 
 const Employee = ({ employee, handleDeleteEmployeeBtn }) => {
     const { id, name, username, department, create_date, update_date, designation_id } = employee;
+
 
     return (
         <tr className="border-2">
@@ -14,14 +15,20 @@ const Employee = ({ employee, handleDeleteEmployeeBtn }) => {
             <td className="border-2 text-center px-8">{create_date}</td>
             <td className="border-2 text-center px-8">{update_date}</td>
             <td className="border-2 text-center">{designation_id}</td>
+            <td className="border-2 text-center px-8 py-5"><Link to={`/employeeProfile/${id}`}><button className="btn btn-outline btn-primary">View Profile</button></Link></td>
             <td className="border-2 text-center px-8"><Link to={`/employee/${id}`}>
-                <button className="btn btn-ghost">Update</button></Link></td>
+                <button className="btn btn-outline btn-primary">Update</button></Link>
+            </td>
+            <td className="border-2 text-center px-8"><Link to={`/employeeUpdSch/${id}`}>
+                <button className="btn btn-outline btn-primary">Update Schedule</button></Link>
+            </td>
 
             <td><button className="btn btn-ghost" onClick={() => handleDeleteEmployeeBtn(id)}>
                 <FaTrashCan />
             </button></td>
-            <td className="border-2 text-center px-8"><Link to={`/employeeSchedule/${id}`}><button className="btn btn-ghost">Work Schedule</button></Link></td>
-            <td className="border-2 text-center px-8"><Link to={`/employee/${id}`}><button className="btn btn-ghost">Attendence</button></Link></td>
+            <td className="border-2 text-center px-8 py-5"><Link to={`/employeeSchedule/${id}`}><button className="btn btn-outline btn-primary">Work Schedule</button></Link></td>
+            <td className="border-2 text-center px-8 py-5"><Link to={`/employeeScheduleEx/${id}`}><button className="btn btn-outline btn-primary">Schedule Exchange</button></Link></td>
+            <td className="border-2 text-center px-8 py-5"><Link to={`/employee/${id}`}><button className="btn btn-outline btn-primary">Attendence</button></Link></td>
         </tr>
 
 

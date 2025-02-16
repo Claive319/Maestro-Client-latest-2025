@@ -17,6 +17,9 @@ import UpdateEmployee from './Components/Employees/UpdateEmployee';
 import Attendences from './Components/Attendence/Attendences';
 import UEmpSchedule from './Components/WorkSchedules/UEmpSchedule';
 import Dashboard from './pages/Dashboard';
+import ExchangeSch from './Components/WorkSchedules/ExchangeSch';
+import UpdateSchedule from './Components/Updating/UpdateSchedule';
+import EmpProfile from './Components/Profile/EmpProfile';
 
 
 const router = createBrowserRouter([
@@ -79,6 +82,21 @@ const router = createBrowserRouter([
         path: "/schedule",
         element: <Dashboard></Dashboard>,
         
+      },
+      {
+        path: "/employeeScheduleEx/:id",
+        element: <ExchangeSch></ExchangeSch>,
+        loader: ()=>fetch('http://localhost:3001/employee')
+      },
+      {
+        path: "/employeeUpdSch/:id",
+        element: <UpdateSchedule></UpdateSchedule>,
+        loader: ()=> fetch('http://localhost:3001/employee')
+      },
+      {
+        path:"/employeeProfile/:id",
+        element: <EmpProfile></EmpProfile>,
+        loader:  ({params})=>fetch(`http://localhost:3001/employe${params.id}`)
       }
     ],
   },

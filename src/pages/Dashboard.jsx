@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import Schedule from './Schedule';
+import React from 'react';
+import { useEffect, useState } from 'react';
+import Echandedempdatashow from './Echandedempdatashow';
+import DeptBasedEmps from '../Components/Department Based/DeptBasedEmps';
 
 const Dashboard = () => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const currentDay = daysOfWeek[new Date().getDay()];
+    const todaynew = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD
+
     // const showSchedule = useLoaderData();
     // console.log(showSchedule)
     const [currentsch, setCurrentSch] = useState([]);
@@ -12,7 +15,14 @@ const Dashboard = () => {
     const [today, setToday] = useState('');
     const [abslist, setAbsList] = useState([]);
     const [curremp, setCurrEmp] = useState([]);
+    const [sthData, setSthData] = useState([]);
+    const [deptbased, setDeptBased] = useState([]);
+    const [getallemplist, setGetAllEmpList] = useState([]);
+    const [exchangedempdata, setEchangedEmpData] = useState([])
+    const [getattenlist, setGetAttenList] = useState([]);
+    console.log(getattenlist.count)
     console.log(abslist)
+    console.log(document.getElementById('nice'));
     const [clickBtn, setClickBtn] = useState(false);
     const handleAbsentbtn = () => {
 
@@ -36,6 +46,75 @@ const Dashboard = () => {
 
             })
     }
+    useEffect(() => {
+        fetch('http://localhost:3001/employee/depatmentBased', {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setDeptBased(data)
+            })
+    }, [])
+
+    useEffect(() => {
+        fetch("http://localhost:3001/attendence/totalpresent", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data); // Check the response format
+                if (data.length > 0) {  // Ensure there's data before accessing it
+                    setGetAttenList(data[0]); // Set the first object from the array
+                }
+            });
+    }, []);
+
+    useEffect(() => {
+        fetch('http://localhost:3001/attendence/totalemployees', {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.length > 0) {
+                    setGetAllEmpList(data[0])
+                }
+            })
+    }, [])
+
+    useEffect(() => {
+        fetch('http://localhost:3001/employee/sthData') // Update the API URL accordingly
+            .then(res => res.json())
+            .then(data => {
+                console.log("STH Data:", data);
+                setSthData(data);
+            });
+    }, []);
+
+    useEffect(() => {
+        fetch('http://localhost:3001/employee/checkIFtodayisTheDay', {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setEchangedEmpData(data)
+
+            })
+    }, [])
     useEffect(() => {
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDay = new Date().getDay();
@@ -110,15 +189,67 @@ const Dashboard = () => {
                 <div >
                     <button onClick={() => { handleAbsentbtn(); setClickBtn(!clickBtn); }} className='btn btn-success'>Check Todays Absent Employees</button>
                 </div>
+
+
+
+            </div>
+            <div>
+                <h1 className='text-center font-extrabold text-4xl'>Total:  <span className='text-red-600'>{getallemplist.count || 0}</span>  employees <span> , Present : {getattenlist.count || 0} employees</span></h1>
+            </div>
+            <div>
+                <h1 className='text-center font-extrabold text-4xl'>
+
+                </h1>
             </div>
             {
                 clickBtn ? (
-                    abslist.map(abs => <h1 className='text-4xl text-center font-extrabold' key={abs.id}>Today <span className='text-red-700'>{abs.count}</span>  employees are absent</h1>)
+                    abslist.map(abs => <h1 className='text-4xl text-center font-extrabold' key={abs.id}>Absent <span className='text-red-700'>{abs.count}</span>  employees </h1>)
                 ) : (
                     'hidden'
                 )
             }
-            <h1 className='text-center font-extrabold text-5xl p-20'>Only Today's Duty Hour</h1>
+            <div className='text-center font-extrabold text-4xl'>
+                {deptbased.map((base, index) => (
+                    <span key={base.id} className="inline-flex">
+                        <DeptBasedEmps base={base} />
+                        {index < deptbased.length - 1 && ', '}
+                    </span>
+                ))}
+            </div>
+
+
+
+
+
+            <h1 className='text-center font-extrabold text-5xl p-20'>Only Todays Duty Hour</h1>
+
+            <div className='py-7' id="nice">
+                {exchangedempdata.filter(exch => {
+                    // Convert date while preserving local timezone
+                    const formattedDate = new Date(exch.Exchange_date);
+                    formattedDate.setMinutes(formattedDate.getMinutes() - formattedDate.getTimezoneOffset());
+                    const correctedDate = formattedDate.toISOString().split("T")[0];
+
+                    console.log(exch);
+                    console.log(correctedDate);
+
+                    return correctedDate === "2025-02-09";
+                }).length > 0 ? (
+                    exchangedempdata
+                        .filter(exch => {
+                            const formattedDate = new Date(exch.Exchange_date);
+                            formattedDate.setMinutes(formattedDate.getMinutes() - formattedDate.getTimezoneOffset());
+                            const correctedDate = formattedDate.toISOString().split("T")[0];
+
+                            return correctedDate === "2025-02-09";
+                        })
+                        .map(exch => <Echandedempdatashow key={exch.id} exch={exch} />)
+                ) : (
+                    <p className="font-extrabold text-3xl text-center">
+                        No Employees Changed shift with other Employees today
+                    </p>
+                )}
+            </div>
 
 
             <div className='flex'>
