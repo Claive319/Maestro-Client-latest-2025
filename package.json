@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "datatables.net": "^2.2.2",
+    "datatables.net-dt": "^2.2.2",
+    "jquery": "^3.7.1",
     "localforage": "^1.10.0",
     "match-sorter": "^8.0.0",
     "react": "^18.3.1",

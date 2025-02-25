@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2025 at 10:40 AM
+-- Generation Time: Feb 25, 2025 at 02:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -85,7 +85,11 @@ INSERT INTO `attendence` (`id`, `employee_id`, `in_Time`, `out_Time`) VALUES
 (44, 34, '2025-02-09 02:56:00', '0000-00-00 00:00:00'),
 (45, 35, '2025-02-09 09:22:00', '0000-00-00 00:00:00'),
 (46, 40, '2025-02-09 06:05:00', '0000-00-00 00:00:00'),
-(47, 14, '2025-02-09 09:36:00', '0000-00-00 00:00:00');
+(47, 14, '2025-02-09 09:36:00', '0000-00-00 00:00:00'),
+(48, 25, '2025-02-15 02:27:00', '2025-02-15 09:04:00'),
+(49, 25, '2025-02-16 05:58:00', '2025-02-16 15:03:00'),
+(50, 25, '2025-02-17 02:38:00', '2025-02-17 07:11:00'),
+(51, 17, '2025-02-18 05:31:00', '2025-02-18 13:31:00');
 
 -- --------------------------------------------------------
 
@@ -304,15 +308,12 @@ INSERT INTO `employee_schedule` (`id`, `Day_ID`, `employee_id`, `duty_hour_id`) 
 (1, 1, 31, 22),
 (2, 1, 31, 24),
 (3, 1, 28, 23),
-(4, 1, 32, 22),
 (6, 2, 32, 27),
 (7, 2, 28, 26),
 (8, 3, 28, 28),
 (9, 3, 32, 29),
 (10, 3, 28, 30),
-(11, 7, 32, 34),
 (12, 5, 31, 35),
-(13, 7, 32, 36),
 (14, 6, 31, 37),
 (15, 6, 32, 38),
 (16, 6, 28, 38),
@@ -391,8 +392,8 @@ INSERT INTO `employee_schedule` (`id`, `Day_ID`, `employee_id`, `duty_hour_id`) 
 (90, 7, 39, 76),
 (91, 7, 34, 77),
 (92, 7, 29, 78),
-(93, 4, 32, 31),
-(94, 4, 32, 33),
+(93, 7, 32, 31),
+(94, 7, 32, 33),
 (95, 4, 31, 32),
 (96, 2, 14, 80),
 (97, 2, 15, 80),
@@ -402,9 +403,8 @@ INSERT INTO `employee_schedule` (`id`, `Day_ID`, `employee_id`, `duty_hour_id`) 
 (101, 2, 20, 49),
 (102, 2, 21, 87),
 (103, 2, 23, 49),
-(104, 4, 32, 74),
-(105, 7, 32, 42),
-(107, 7, 32, 41);
+(108, 1, 32, 34),
+(109, 1, 32, 36);
 
 -- --------------------------------------------------------
 
@@ -540,7 +540,7 @@ ALTER TABLE `work_schedule`
 -- AUTO_INCREMENT for table `attendence`
 --
 ALTER TABLE `attendence`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `days`
@@ -576,13 +576,13 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT for table `employee_schedule`
 --
 ALTER TABLE `employee_schedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `schedule_exchange`
 --
 ALTER TABLE `schedule_exchange`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `work_schedule`

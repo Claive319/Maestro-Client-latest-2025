@@ -11,9 +11,46 @@ const Employees = () => {
     const [currentdept, setCurrentDept] = useState([]);
     const [currentdesig, setCurrentDesig] = useState([]);
     const [showdept, setShowDept] = useState([]);
-    const [showdesig, setShowDesig]= useState([]);
+    const [showdesig, setShowDesig] = useState([]);
     const [showtitle, setShowTitle] = useState(false)
     const [showdesigtitle, setShowDesigTitlte] = useState(false)
+
+    const searchBtn =(event)=>{
+        event.preventDefault();
+        const form2 = event.target;
+        const search = form2["search"].value;
+        console.log(search)
+        const findSearch = {
+            search
+        }
+        console.log(findSearch)
+        fetch("http://localhost:3001/employeeSearch",{
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(findSearch),
+        })
+        .then(res => res.json())
+        .then(data=>{
+            console.log(data)
+            if (search) {
+                setEmp(data)
+                console.log(emp)
+
+            }
+            else {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to Show The Certain Employees. Please try again.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+
+            }
+        })
+
+    }
 
     useEffect(() => {
         fetch('http://localhost:3001/designations')
@@ -49,8 +86,8 @@ const Employees = () => {
         const dept = form["radio-dept"].value;
         const desigNew = form["radio-desig"].value;
         const selectThisEmp = {
-             dept,
-             desigNew
+            dept,
+            desigNew
         };
 
         console.log(selectThisEmp)
@@ -80,87 +117,10 @@ const Employees = () => {
                 }
 
             })
-        // fetch("http://localhost:3001/employee/filter", {
-        //     method: "POST",
-        //     headers: {
-        //         "content-type": "application/json",
-        //     },
-        //     body: JSON.stringify(selectThisEmp),
-        // })
-        //     .this(res => res.json())
-        //     .ths(data => {
-        //         if (currentdept && currentdesig) {
-        //             setEmp(data)
-
-        //         }
-        //         else {
-        //             Swal.fire({
-        //                 title: "Error!",
-        //                 text: "Failed to Show The Certain Employees. Please try again.",
-        //                 icon: "error",
-        //                 confirmButtonText: "Ok",
-        //             });
-        //         }
-
-        //     })
 
     }
 
 
-
-
-
-
-
-    // const byDesig = (desID, deptID) => {
-    //     console.log(desID)
-
-
-
-
-    //     fetch(`http://localhost:3001/desigDept/filter`, {
-    //         method: "POST",
-    //         headers: {
-    //             "content-type": "application/json",
-    //         },
-    //         body: JSON.stringify({ "desig": desID, "dept": deptID })
-    //     })
-    //         .then(res => res.json())
-    //         .then(
-    //             (result) => {
-    //                 console.log(">>" + result)
-    //                 setEmp(result)
-
-    //             },
-
-    //         )
-
-    // }
-
-    // const byDept = (desID) => {
-    //     console.log(desID)
-
-
-
-
-    //     fetch(`http://localhost:3001/employee/filterDept`, {
-    //         method: "POST",
-    //         headers: {
-    //             "content-type": "application/json",
-    //         },
-    //         body: JSON.stringify({ "dept": desID, })
-    //     })
-    //         .then(res => res.json())
-    //         .then(
-    //             (result) => {
-    //                 console.log(">>" + result)
-    //                 setEmp(result)
-
-    //             },
-
-    //         )
-
-    // }
 
 
 
@@ -194,11 +154,16 @@ const Employees = () => {
     }
     return (
         <div>
-            <h1 className="text-center font-bold text-2xl">Total Employees are : {emp.length}</h1>
+            <h1 className="text-center font-bold text-2xl mb-3">Total Employees are : {emp.length}</h1>
+
             <div className="">
+                <form onSubmit={searchBtn} className="form-control flex w-[430px] flex-row ml-60">
+                    <input type="text" placeholder="Search" name="search" className="input input-bordered w-24 md:w-auto" />
+                    <input type="submit" className="btn  hover:btn-secondary text-center items-center mx-auto   mb-8 font-extrabold text-2xl -transform transform hover:scale-110 hover:shadow-xl rounded-[24px]  border-purple-200 bg-white hover:text-white" value="Search" />
+                </form>
                 <form onSubmit={onSubmit} className=" flex justify-between pb-20">
-                    <div className="dropdown dropdown-bottom">
-                        <div tabIndex={0} role="button" className="btn m-1" defaultValue="Departments">{showtitle ? showdept?.title : "Which Dept You want to See"}
+                    <div className="dropdown dropdown-bottom ml-80">
+                        <div tabIndex={0} role="button" className="btn  " defaultValue="Departments">{showtitle ? showdept?.title : "Which Dept You want to See"}
 
                         </div>
                         <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
@@ -228,8 +193,8 @@ const Employees = () => {
                                 currentdesig.map((item, index) => <li key={index}><a className="flex gap-9"><input
                                     type="radio"
                                     value={item.designation_id}
-                                    onClick={()=>{setShowDesig(item);setShowDesigTitlte(!false)}}
-                                    
+                                    onClick={() => { setShowDesig(item); setShowDesigTitlte(!false) }}
+
                                     name="radio-desig"
                                     className="checkbox checkbox-success"
                                     // onClick={() => byDesig(item.designation_id, item.department)}
@@ -241,6 +206,7 @@ const Employees = () => {
 
                         </ul>
                     </div>
+
                     <div className="form-control mt-6">
                         <button className="btn  hover:btn-secondary text-center items-center mx-auto w-[60px]  mb-8 font-extrabold text-2xl -transform transform hover:scale-110 hover:shadow-xl rounded-[24px]  border-purple-200 bg-white hover:text-white">Go</button>
 
@@ -253,28 +219,29 @@ const Employees = () => {
 
             </div>
             <table >
-                <thead>
-                    <tr className="border-2 text-center px-10">
-                        <th className="border-2 text-center px-10">ID</th>
-                        <th className="border-2 text-center px-10">Name</th>
-                        <th className="border-2 text-center px-10">Username</th>
-                        <th className="border-2 text-center px-10">Department</th>
-                        <th className="border-2 text-center px-10">Create Date</th>
-                        <th className="border-2 text-center px-10">Update Date</th>
-                        <th className="border-2 text-center px-10">Designation ID</th>
+                <thead className="bg-[#e3edf9] rounded-[6px]">
+                    <tr className=" text-center px-10">
+                        <th className=" text-center px-10">ID</th>
+                        <th className=" text-center px-10">Name</th>
+                        <th className=" text-center px-10">Username</th>
+                        <th className=" text-center px-10">Department</th>
+                        <th className=" text-center px-10">Create Date</th>
+                        <th className=" text-center px-10">Update Date</th>
+                        <th className=" text-center px-10">Designation ID</th>
 
                     </tr>
                 </thead>
-                <tbody >
-
-                    {
-                        emp.map(employee => <Employee key={employee.id} handleDeleteEmployeeBtn={handleDeleteEmployeeBtn} employee={employee}></Employee>)
-                    }
-
-
-
-
+                <tbody>
+                    {emp.map((employee, index) => (
+                        <Employee
+                            key={employee.id}
+                            employee={employee}
+                            index={index}
+                            handleDeleteEmployeeBtn={handleDeleteEmployeeBtn}
+                        />
+                    ))}
                 </tbody>
+
             </table>
 
             {/* <div className="card grid md:grid-cols-3  gap-12">

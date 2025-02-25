@@ -20,6 +20,7 @@ import Dashboard from './pages/Dashboard';
 import ExchangeSch from './Components/WorkSchedules/ExchangeSch';
 import UpdateSchedule from './Components/Updating/UpdateSchedule';
 import EmpProfile from './Components/Profile/EmpProfile';
+import AttendenceesOfAll from './pages/AttendenceesOfAll';
 
 
 const router = createBrowserRouter([
@@ -42,6 +43,12 @@ const router = createBrowserRouter([
         path:"/employee",
         loader: ()=>fetch(`http://localhost:3001/employee`),
         element: <Employees></Employees>
+        // children: [
+        //   {
+        //     path: "employee/totalAttendence",
+        //     element: <AttendenceesOfAll></AttendenceesOfAll>
+        //   }
+        // ]
       },
       {
         path:"/designations",
@@ -96,7 +103,12 @@ const router = createBrowserRouter([
       {
         path:"/employeeProfile/:id",
         element: <EmpProfile></EmpProfile>,
-        loader:  ({params})=>fetch(`http://localhost:3001/employe${params.id}`)
+        loader:  ({params})=>fetch(`http://localhost:3001/employee/${params.id}`)
+      },
+      {
+        path: "/employee/totalAttendence",
+        element: <AttendenceesOfAll></AttendenceesOfAll>,
+        loader: ()=>fetch("")
       }
     ],
   },

@@ -1,15 +1,18 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from "react-router-dom";
+import $ from "jquery";
+import "datatables.net-dt/css/dataTables.dataTables.css"; // Corrected CSS import
+import "datatables.net";
+
+
+
+
 import Echandedempdatashow from './Echandedempdatashow';
 import DeptBasedEmps from '../Components/Department Based/DeptBasedEmps';
 
+
 const Dashboard = () => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDay = daysOfWeek[new Date().getDay()];
-    const todaynew = new Date().toISOString().split('T')[0]; // Get YYYY-MM-DD
-
-    // const showSchedule = useLoaderData();
-    // console.log(showSchedule)
     const [currentsch, setCurrentSch] = useState([]);
     const [emp, setEmp] = useState([]);
     const [today, setToday] = useState('');
@@ -18,20 +21,51 @@ const Dashboard = () => {
     const [sthData, setSthData] = useState([]);
     const [deptbased, setDeptBased] = useState([]);
     const [getallemplist, setGetAllEmpList] = useState([]);
-    const [exchangedempdata, setEchangedEmpData] = useState([])
+    const [exchangedempdata, setEchangedEmpData] = useState([]);
     const [getattenlist, setGetAttenList] = useState([]);
-    console.log(getattenlist.count)
-    console.log(abslist)
-    console.log(document.getElementById('nice'));
     const [clickBtn, setClickBtn] = useState(false);
-    const handleAbsentbtn = () => {
 
+    const navigate = useNavigate();
 
-        const currentdaay = today;
-        console.log(currentdaay)
-        const addDau = {
-            currentdaay
+    const searSubmitBtn = async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const search = form["searchId"].value;
+        const addSearchByID = { search };
+
+        try {
+            const response = await fetch("http://localhost:3001/employeeIdSearch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(addSearchByID)
+            });
+
+            // Check if the response is not OK before parsing JSON
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Unknown error occurred");
+            }
+
+            const data = await response.json();
+
+            if (data && data.id) {
+                console.log(data.id);
+                navigate(`/employeeProfile/${data.id}`);
+            } else {
+                console.error("Employee ID not found in response");
+            }
+        } catch (error) {
+            console.error("Error fetching employee data:", error);
         }
+    };
+
+    const handleAbsentbtn = () => {
+        const currentdaay = today;
+        console.log(currentdaay);
+        const addDau = { currentdaay };
+
         fetch('http://localhost:3001/addSchedule/countabs', {
             method: "POST",
             headers: {
@@ -41,11 +75,11 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                setAbsList(data)
+                console.log(data);
+                setAbsList(data);
+            });
+    };
 
-            })
-    }
     useEffect(() => {
         fetch('http://localhost:3001/employee/depatmentBased', {
             method: "POST",
@@ -55,10 +89,10 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                setDeptBased(data)
-            })
-    }, [])
+                console.log(data);
+                setDeptBased(data);
+            });
+    }, []);
 
     useEffect(() => {
         fetch("http://localhost:3001/attendence/totalpresent", {
@@ -85,15 +119,15 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                console.log(data);
                 if (data.length > 0) {
-                    setGetAllEmpList(data[0])
+                    setGetAllEmpList(data[0]);
                 }
-            })
-    }, [])
+            });
+    }, []);
 
     useEffect(() => {
-        fetch('http://localhost:3001/employee/sthData') // Update the API URL accordingly
+        fetch('http://localhost:3001/employee/sthData')
             .then(res => res.json())
             .then(data => {
                 console.log("STH Data:", data);
@@ -110,16 +144,17 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                setEchangedEmpData(data)
+                console.log(data);
+                setEchangedEmpData(data);
+            });
+    }, []);
 
-            })
-    }, [])
     useEffect(() => {
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDay = new Date().getDay();
         setToday(days[currentDay]);
     }, []);
+
     useEffect(() => {
         fetch('http://localhost:3001/employee/workthatday', {
             method: "POST",
@@ -129,11 +164,10 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                setCurrEmp(data)
-
-            })
-    }, [])
+                console.log(data);
+                setCurrEmp(data);
+            });
+    }, []);
 
     useEffect(() => {
         fetch('http://localhost:3001/employee/emptoday', {
@@ -144,14 +178,42 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                console.log(data);
                 if (data.length > 0) {
-                    setCurrentSch(data)
+                    setCurrentSch(data);
                 }
+            });
+    }, []);
+    //  useEffect(() => {
+    //     fetch('http://localhost:3001/employee/emp', {
+    //         method: "POST",
+    //         headers: {
+    //             "content-type": "application/json",
+    //         },
+    //     })
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             console.log(data)
+    //             if (data.length > 0) {
+    //                 setEmp(data)
+    //             }
+    //         })
+    // }, [])
+    // useEffect(()=>{
+    //     fetch("http://localhost:3001/employee/emp",{
+    //         method: "POST",
+    //         headers: {
+    //             "content-type": "application/json",
+    //         },
+    //     })
+    //     .then(res=>res.json())
+    //     .then(data=>{
+    //         console.log(data)
+    //         setEmp(data)
+    //     })
+    // },[])
 
-            })
-
-    }, [])
+    // Initialize DataTables for the table with id "example"
     useEffect(() => {
         fetch('http://localhost:3001/employee/emp', {
             method: "POST",
@@ -161,77 +223,92 @@ const Dashboard = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                if (data.length > 0) {
-                    setEmp(data)
+                setEmp(data);
+                if ($("#example").length) {
+                    $("#example").DataTable({
+                        data: data,
+                        columns: [
+                            {
+                                title: "Name",
+                                data: "name",
+                            },
+                        ],
+                    });
                 }
-            })
-    }, [])
+            });
+    }, []);
+
 
     return (
-        <div className=''>
-            <div className='flex justify-between'>
-                <h1>Welcome!</h1>
-                <p className='text-4xl font-extrabold text-center p-10'>Today is: <strong>{today}</strong></p>
-
-
-                {/* <label htmlFor="daySelect">Choose a day: </label>
-                <select id="daySelect" defaultValue={today}>
-                    <option name='sun' value="Sunday">Sunday</option>
-                    <option name='mon' value="Monday">Monday</option>
-                    <option name='tue' value="Tuesday">Tuesday</option>
-                    <option name='wed' value="Wednesday">Wednesday</option>
-                    <option name='thu' value="Thursday">Thursday</option>
-                    <option name='fri' value="Friday">Friday</option>
-                    <option name='sat' value="Saturday">Saturday</option>
-                </select> */}
-
-                <div >
-                    <button onClick={() => { handleAbsentbtn(); setClickBtn(!clickBtn); }} className='btn btn-success'>Check Todays Absent Employees</button>
+        <div className='w-[1720px] ml-[373px] mb-10 bg-gray-200 rounded-[25px]'>
+            <form onSubmit={searSubmitBtn} className="join">
+                <div>
+                    <div>
+                        <input className="input input-bordered join-item" name="searchId" placeholder="Search" />
+                    </div>
                 </div>
-
-
-
+                <input className='indicator btn join-item' type="submit" value="Search" />
+            </form>
+            <div className='h-[380px] text-left bg-[#FAFAF9] rounded-[15px] m-4'>
+                <div className='flex text-start justify-around'>
+                    <p className='text-2xl text-center font-bold mb-6'>
+                        Today is: <strong>{today}</strong>
+                    </p>
+                    <div>
+                        <button
+                            onClick={() => {
+                                handleAbsentbtn();
+                                setClickBtn(!clickBtn);
+                            }}
+                            className='btn btn-success'
+                        >
+                            Check Todays Absent Employees
+                        </button>
+                    </div>
+                </div>
+                <div className='flex gap-7 justify-around'>
+                    <div className='border-2 p-7 rounded-[20px]'>
+                        <h1 className='text-2xl text-center font-bold mb-6 underline'>Employee by department</h1>
+                        <div className='text-base'>
+                            {deptbased.map((base) => (
+                                <div key={base.id} className="flex">
+                                    <DeptBasedEmps base={base} />
+                                    <span className="mx-1"></span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className='border-2 rounded-2xl'>
+                        <h1 className='text-2xl text-center font-bold mb-6 p-2 underline'>Employee Status</h1>
+                        <h1 className="text-base p-2">
+                            Total: <span className="text-red-600">{getallemplist.count || 0}</span> employees
+                        </h1>
+                        <h1 className="text-base p-2">
+                            Present: <span>{getattenlist.count || 0}</span> employees
+                        </h1>
+                        {clickBtn ? (
+                            abslist.map(abs => (
+                                <h1 key={abs.id} className="text-base font-extrabold p-2">
+                                    Absent: <span className="text-red-700">{abs.count}</span> employees
+                                </h1>
+                            ))
+                        ) : (
+                            <p className="text-base p-2">hidden</p>
+                        )}
+                    </div>
+                </div>
             </div>
-            <div>
-                <h1 className='text-center font-extrabold text-4xl'>Total:  <span className='text-red-600'>{getallemplist.count || 0}</span>  employees <span> , Present : {getattenlist.count || 0} employees</span></h1>
-            </div>
-            <div>
-                <h1 className='text-center font-extrabold text-4xl'>
 
-                </h1>
-            </div>
-            {
-                clickBtn ? (
-                    abslist.map(abs => <h1 className='text-4xl text-center font-extrabold' key={abs.id}>Absent <span className='text-red-700'>{abs.count}</span>  employees </h1>)
-                ) : (
-                    'hidden'
-                )
-            }
-            <div className='text-center font-extrabold text-4xl'>
-                {deptbased.map((base, index) => (
-                    <span key={base.id} className="inline-flex">
-                        <DeptBasedEmps base={base} />
-                        {index < deptbased.length - 1 && ', '}
-                    </span>
-                ))}
-            </div>
+            <h1 className='text-2xl text-center font-extrabold mb-6 p-2'>
+                Duty Schedule of <strong>{today}</strong>
+            </h1>
 
-
-
-
-
-            <h1 className='text-center font-extrabold text-5xl p-20'>Only Todays Duty Hour</h1>
-
-            <div className='py-7' id="nice">
+            <div className='p-2' id="nice">
                 {exchangedempdata.filter(exch => {
                     // Convert date while preserving local timezone
                     const formattedDate = new Date(exch.Exchange_date);
                     formattedDate.setMinutes(formattedDate.getMinutes() - formattedDate.getTimezoneOffset());
                     const correctedDate = formattedDate.toISOString().split("T")[0];
-
-                    console.log(exch);
-                    console.log(correctedDate);
 
                     return correctedDate === "2025-02-09";
                 }).length > 0 ? (
@@ -245,83 +322,85 @@ const Dashboard = () => {
                         })
                         .map(exch => <Echandedempdatashow key={exch.id} exch={exch} />)
                 ) : (
-                    <p className="font-extrabold text-3xl text-center">
+                    <p className="text-2xl text-center font-bold mb-6">
                         No Employees Changed shift with other Employees today
                     </p>
                 )}
             </div>
 
-
-            <div className='flex'>
-                <ul>
-                    <h1 className='text-xl font-bold border-2 text-center px-10 text-red-800'>Todays shift of the Employees</h1>
-                    {/* Employees of Billing */}
-                    <h1 className="text-lg font-bold border-2 text-center px-10">Employees of Log Support</h1>
+            <div className="flex p-10 space-x-6 rounded-2xl">
+                <ul className="flex flex-col bg-[#FAFAF9] rounded-[18px]">
+                    <h1 className="text-xl font-bold border-2 text-center p-2 text-red-800">
+                        Support Employees
+                    </h1>
+                    <h1 className="text-lg font-bold border-2 text-center p-2">
+                        Log Support
+                    </h1>
                     {curremp
                         .filter(emp => emp.department === 15)
                         .map(ajkeremp => (
-                            <li key={ajkeremp.id} className='border-2 px-10 py-3'>{ajkeremp.name}</li>
+                            <li key={ajkeremp.id} className="border-2 px-10 py-3">
+                                {ajkeremp.name}
+                            </li>
                         ))}
-
-                    {/* Employees of Log Support */}
-                    <h1 className="text-lg font-bold border-2 text-center px-10">Employees of Billing Support</h1>
+                    <h1 className="text-lg font-bold border-2 text-center px-10">
+                        Billing Support
+                    </h1>
                     {curremp
                         .filter(emp => emp.department !== 15)
                         .map(ajkeremp => (
-                            <li key={ajkeremp.id} className='border-2 px-10 py-3'>{ajkeremp.name}</li>
+                            <li key={ajkeremp.id} className="border-2 p-2">
+                                {ajkeremp.name}
+                            </li>
                         ))}
                 </ul>
-                <table>
-                    <thead>
-                        <tr className="border-2">
-                            {
-                                currentsch.map(shg => {
-                                    // Extract AM/PM from the time
-                                    const formattedInTime = new Date(`1970-01-01T${shg.From_t}`).toLocaleString('en-US', {
+
+                <div className="  rounded-[15px] ">
+                    <table className='bg-[#FAFAF9] rounded-[18px] '>
+                        <thead>
+                            <tr className="border-2 ">
+                                {currentsch.map(shg => {
+                                    // Ensure From_t and To_t are strings in HH:mm format
+                                    const [inHours, inMinutes] = shg.From_t.split(':').map(Number);
+                                    const [outHours, outMinutes] = shg.To_t.split(':').map(Number);
+
+                                    // Create date objects for proper formatting
+                                    const formattedInTime = new Date(1970, 0, 1, inHours, inMinutes).toLocaleTimeString('en-US', {
                                         hour: '2-digit',
                                         minute: '2-digit',
                                         hour12: true,
                                     });
 
-                                    const formattedOutTime = new Date(`1970-01-01T${shg.To_t}`).toLocaleString('en-US', {
+                                    const formattedOutTime = new Date(1970, 0, 1, outHours, outMinutes).toLocaleTimeString('en-US', {
                                         hour: '2-digit',
                                         minute: '2-digit',
                                         hour12: true,
                                     });
 
                                     return (
-                                        <th className='border-2 text-center px-10' key={shg.id}>
+                                        <th className="border-2 text-center p-2" key={shg.id}>
                                             {formattedInTime} - {formattedOutTime}
                                         </th>
                                     );
-                                })
-                            }
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {emp.map(sch => (
-                            <tr key={sch.id} className='border-2 text-center'>
-                                {currentsch.map(shg => (
-
-                                    <td key={`${shg.id}-${sch.id}`} className="border-2 px-10">
-                                        {shg.duty_hour_id === sch.duty_hour_id ? sch.name : ""}
-                                    </td>
-                                ))}
+                                })}
                             </tr>
-                        ))}
+                        </thead>
+                        <tbody>
+                            {emp.map(sch => (
+                                <tr key={sch.id} className="border-2 text-center">
+                                    {currentsch.map(shg => (
+                                        <td key={`${shg.id}-${sch.id}`} className="border-2 p-2">
+                                            {shg.duty_hour_id === sch.duty_hour_id ? sch.name : ""}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
 
-                    </tbody>
-                </table>
-
-
-
+                </div>
             </div>
-
-
-
-        </div>
+        </div >
     );
 };
 
