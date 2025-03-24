@@ -244,8 +244,8 @@ const Employees = () => {
 
 
             </div>
-            <div className="p-4">
-                <table className="">
+            <div className="p-4 ">
+                <table className="mx-auto justify-center items-center align-middle">
                     <thead className="bg-[#e3edf9] rounded-[6px]">
                         <tr className=" text-center px-10">
                             <th className=" text-center px-10">ID</th>

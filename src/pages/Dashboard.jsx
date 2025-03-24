@@ -289,7 +289,7 @@ const Dashboard = () => {
             <form onSubmit={searSubmitBtn} className="join">
                 <div>
                     <div>
-                        <input className="input input-bordered join-item" name="searchId" placeholder="Search" />
+                        <input className="input input-bordered join-item" name="searchId" placeholder="Search by name view profile" />
                     </div>
                 </div>
                 <input className='indicator btn join-item' type="submit" value="Search" />
