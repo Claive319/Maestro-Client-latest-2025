@@ -4,6 +4,24 @@ import { Link, Links } from "react-router-dom";
 
 const Employee = ({ employee, handleDeleteEmployeeBtn , index}) => {
     const { id, name, username, department, create_date, update_date, designation_id } = employee;
+    const formattedCreateDate = new Date(create_date).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    });
+
+    const formattedUpdateDate = new Date(update_date).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    });
+
     const rowClass = (index + 1) % 2 === 0 
     ? "bg-[#e3edf9] rounded-[6px]" 
     : "bg-white";
@@ -14,8 +32,8 @@ const Employee = ({ employee, handleDeleteEmployeeBtn , index}) => {
             <td className=" text-center">{name}</td>
             <td className=" text-center">{username}</td>
             <td className=" text-center">{department}</td>
-            <td className=" text-center px-8">{create_date}</td>
-            <td className=" text-center px-8">{update_date}</td>
+            <td className=" text-center px-8">{formattedCreateDate}</td>
+            <td className=" text-center px-8">{formattedUpdateDate}</td>
             <td className=" text-center">{designation_id}</td>
             <td className=" text-center px-8 py-5"><Link to={`/employeeProfile/${id}`}><button className="btn btn-outline btn-success">View Profile</button></Link></td>
             <td className=" text-center px-8"><Link to={`/employee/${id}`}>

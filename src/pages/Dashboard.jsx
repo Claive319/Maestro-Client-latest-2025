@@ -3,6 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import $ from "jquery";
 import "datatables.net-dt/css/dataTables.dataTables.css"; // Corrected CSS import
 import "datatables.net";
+import DataTable from 'react-data-table-component';
+import Swal from "sweetalert2";
 
 
 
@@ -12,6 +14,7 @@ import DeptBasedEmps from '../Components/Department Based/DeptBasedEmps';
 
 
 const Dashboard = () => {
+
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const [currentsch, setCurrentSch] = useState([]);
     const [emp, setEmp] = useState([]);
@@ -30,7 +33,19 @@ const Dashboard = () => {
     const searSubmitBtn = async (event) => {
         event.preventDefault();
         const form = event.target;
-        const search = form["searchId"].value;
+        const search = form["searchId"].value.trim();
+
+        // Check if search input contains only letters and spaces (basic validation for names)
+        if (!/^[a-zA-Z\s]+$/.test(search)) {
+            Swal.fire({
+                title: "Invalid Input!",
+                text: "Please enter a valid name.",
+                icon: "warning",
+                confirmButtonText: "Ok",
+            });
+            return;
+        }
+
         const addSearchByID = { search };
 
         try {
@@ -42,7 +57,6 @@ const Dashboard = () => {
                 body: JSON.stringify(addSearchByID)
             });
 
-            // Check if the response is not OK before parsing JSON
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || "Unknown error occurred");
@@ -54,12 +68,43 @@ const Dashboard = () => {
                 console.log(data.id);
                 navigate(`/employeeProfile/${data.id}`);
             } else {
-                console.error("Employee ID not found in response");
+                Swal.fire({
+                    title: "No Such Name Exists!",
+                    text: "Please enter a correct employee name.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
             }
         } catch (error) {
-            console.error("Error fetching employee data:", error);
+            Swal.fire({
+                title: "Error!",
+                text: error.message || "Something went wrong.",
+                icon: "error",
+                confirmButtonText: "Ok",
+            });
         }
     };
+    const handleGetReqBtn = async () => {
+        try {
+            const response = await fetch("https://pkbox.bil.pe/api/v1/user/getUserInformation", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer eyJ0eXBlIjoiand0IiwiZGV2aWNlIjoiVlRGRmRWbFVTWGRTTWxwVFpVVkdhZz09IiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyIjoiV1ZkWmVVNVhSbXBhUkZWMFdYcGpNazFwTURCTlJFcHRURmRLYVUxRVZYUlplbFY1VFVkRk5GbFVaek5OZWtsNSIsInN1YiI6IlNoYXdhbiBSb3kiLCJpYXQiOjE3NDA1NTIyMDAsImV4cCI6MTc0MTIwMDIwMH0.3Hx2fJjmV1SSuD9jagnLsADiQibL1Ero20t7u2BJu00`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("User Information:", data);
+        } catch (error) {
+            console.error("Error fetching user information:", error.message);
+        }
+    };
+
 
     const handleAbsentbtn = () => {
         const currentdaay = today;
@@ -288,7 +333,7 @@ const Dashboard = () => {
                         </h1>
                         {clickBtn ? (
                             abslist.map(abs => (
-                                <h1 key={abs.id} className="text-base font-extrabold p-2">
+                                <h1 key={abs.id} className="text-base  p-2">
                                     Absent: <span className="text-red-700">{abs.count}</span> employees
                                 </h1>
                             ))
@@ -297,6 +342,9 @@ const Dashboard = () => {
                         )}
                     </div>
                 </div>
+            </div>
+            <div>
+                <button onClick={handleGetReqBtn} className='btn btn-success'>Get Request</button>
             </div>
 
             <h1 className='text-2xl text-center font-extrabold mb-6 p-2'>

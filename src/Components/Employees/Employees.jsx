@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import Swal from "sweetalert2";
 import Employee from "./Employee";
+import axios from "axios";
 
 
 
@@ -15,51 +16,76 @@ const Employees = () => {
     const [showtitle, setShowTitle] = useState(false)
     const [showdesigtitle, setShowDesigTitlte] = useState(false)
 
-    const searchBtn =(event)=>{
+    const searchBtn = (event) => {
         event.preventDefault();
         const form2 = event.target;
-        const search = form2["search"].value;
-        console.log(search)
-        const findSearch = {
-            search
+        const search = form2["search"].value.trim();
+
+        // Check if search input contains only letters and spaces (basic validation for names)
+        if (!/^[a-zA-Z\s]+$/.test(search)) {
+            Swal.fire({
+                title: "Invalid Input!",
+                text: "Please enter a valid name.",
+                icon: "warning",
+                confirmButtonText: "Ok",
+            });
+            return;
         }
-        console.log(findSearch)
-        fetch("http://localhost:3001/employeeSearch",{
+
+        const findSearch = { search };
+        console.log(findSearch);
+
+        fetch("http://localhost:3001/employeeSearch", {
             method: "POST",
             headers: {
-                "content-type": "application/json",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(findSearch),
         })
-        .then(res => res.json())
-        .then(data=>{
-            console.log(data)
-            if (search) {
-                setEmp(data)
-                console.log(emp)
-
-            }
-            else {
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("Server error. Please try again.");
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log(data);
+                if (data && data.length > 0) {
+                    setEmp(data);
+                    console.log(emp);
+                } else {
+                    Swal.fire({
+                        title: "No Such Name Exists!",
+                        text: "Please enter a correct employee name.",
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                    });
+                }
+            })
+            .catch(error => {
                 Swal.fire({
                     title: "Error!",
-                    text: "Failed to Show The Certain Employees. Please try again.",
+                    text: error.message || "Something went wrong.",
                     icon: "error",
                     confirmButtonText: "Ok",
                 });
+            });
+    };
 
-            }
-        })
-
-    }
 
     useEffect(() => {
-        fetch('http://localhost:3001/designations')
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setCurrentDesig(data);
-            })
-            .catch(err => console.error("Failed to fetch designations:", err));
+        axios.get('http://localhost:3001/designations')
+        .then(data=>{
+            console.log(data.data)
+            setCurrentDesig(data.data)
+        })
+        // fetch('http://localhost:3001/designations')
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         setCurrentDesig(data);
+        //     })
+        //     .catch(err => console.error("Failed to fetch designations:", err));
 
     }, []);  // Empty array ensures this runs only once
 
@@ -218,31 +244,35 @@ const Employees = () => {
 
 
             </div>
-            <table >
-                <thead className="bg-[#e3edf9] rounded-[6px]">
-                    <tr className=" text-center px-10">
-                        <th className=" text-center px-10">ID</th>
-                        <th className=" text-center px-10">Name</th>
-                        <th className=" text-center px-10">Username</th>
-                        <th className=" text-center px-10">Department</th>
-                        <th className=" text-center px-10">Create Date</th>
-                        <th className=" text-center px-10">Update Date</th>
-                        <th className=" text-center px-10">Designation ID</th>
+            <div className="p-4">
+                <table className="">
+                    <thead className="bg-[#e3edf9] rounded-[6px]">
+                        <tr className=" text-center px-10">
+                            <th className=" text-center px-10">ID</th>
+                            <th className=" text-center px-10">Name</th>
+                            <th className=" text-center px-10">Username</th>
+                            <th className=" text-center px-10">Department</th>
+                            <th className=" text-center px-10">Create Date</th>
+                            <th className=" text-center px-10">Update Date</th>
+                            <th className=" text-center px-10">Designation ID</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {emp.map((employee, index) => (
-                        <Employee
-                            key={employee.id}
-                            employee={employee}
-                            index={index}
-                            handleDeleteEmployeeBtn={handleDeleteEmployeeBtn}
-                        />
-                    ))}
-                </tbody>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {emp.map((employee, index) => (
+                            <Employee
+                                key={employee.id}
+                                employee={employee}
+                                index={index}
+                                handleDeleteEmployeeBtn={handleDeleteEmployeeBtn}
+                            />
+                        ))}
+                    </tbody>
 
-            </table>
+                </table>
+
+            </div>
+
 
             {/* <div className="card grid md:grid-cols-3  gap-12">
 
